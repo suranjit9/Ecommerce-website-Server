@@ -1,7 +1,8 @@
 const express = require('express');
 const app = express();
-require('dotenv').config()
+require('dotenv').config();
 const cors = require('cors');
+const { ObjectId } = require('mongodb');
 const port = process.env.PORT || 5000;
 
 //  middeware-------
@@ -26,7 +27,23 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
-    
+    const mongodbDatabase = client.db("productList").collection("Product");
+    app.post('/AddProduct', async(req, res)=>{
+        const ProInfo = req.body;
+        const result = await mongodbDatabase.insertOne(ProInfo);
+        res.send(result);
+    })
+    app.get('/AddProduct', async(req, res)=>{
+        const find = mongodbDatabase.find();
+        const result = await find.toArray();
+        res.send(result);
+        })
+    app.get('/AddProduct/:id', async (req, res)=>{
+      const id = req.params.id;
+      const cursor = {_id: new ObjectId(id)};
+      const result = await mongodbDatabase.findOne(cursor);
+      res.send(result);
+    })
 
 
 
