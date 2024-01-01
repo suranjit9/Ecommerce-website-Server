@@ -28,6 +28,7 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
     const mongodbDatabase = client.db("productList").collection("Product");
+    const mongodbAddToCard = client.db("productList").collection("AddToCard");
     app.post('/AddProduct', async(req, res)=>{
         const ProInfo = req.body;
         const result = await mongodbDatabase.insertOne(ProInfo);
@@ -36,7 +37,8 @@ async function run() {
     app.get('/AddProduct', async(req, res)=>{
         const find = mongodbDatabase.find();
         const result = await find.toArray();
-        res.send(result);
+        const result2 = result.slice(0, 8);
+        res.send(result2);
         })
     app.get('/AddProduct/:id', async (req, res)=>{
       const id = req.params.id;
@@ -44,6 +46,36 @@ async function run() {
       const result = await mongodbDatabase.findOne(cursor);
       res.send(result);
     })
+    // AddtoCard Post & Get Start
+    app.post('/addToCard', async(req, res)=>{
+      const productAddToCard = req.body;
+      const result = await mongodbAddToCard.insertOne(productAddToCard);
+      res.send(result)
+    })
+    app.get('/addToCard', async(req, res)=>{
+      const find = mongodbAddToCard.find();
+      const result = await find.toArray();
+      // const result2 = result.slice(0, 8);
+      res.send(result);
+      })
+    app.get('/addToCard/name:id', async(req, res)=>{
+      const find = req.params.id;
+      const cursor = {_id: new ObjectId(find)};
+      const result = await mongodbAddToCard.findOne(cursor);
+      res.send(result);
+    })
+    
+      // Delete---------------
+    app.delete('/addToCard/:id', async (req, res)=>{
+      const id = req.params.id;
+      const findID = {_id: new ObjectId(id)};
+      const cursor = await mongodbAddToCard.deleteOne(findID);
+      res.send(cursor);
+    })
+    app.delete('/addToCard', async(req, res)=>{
+
+    })
+    // AddtoCard Post & Get END
 
 
 
