@@ -37,8 +37,8 @@ async function run() {
     app.get('/AddProduct', async(req, res)=>{
         const find = mongodbDatabase.find();
         const result = await find.toArray();
-        const result2 = result.slice(0, 8);
-        res.send(result2);
+        // const result2 = result.slice(0, 8);
+        res.send(result);
         })
     app.get('/AddProduct/:id', async (req, res)=>{
       const id = req.params.id;
