@@ -53,11 +53,21 @@ async function run() {
       res.send(result)
     })
     app.get('/addToCard', async(req, res)=>{
-      const find = mongodbAddToCard.find();
+      let query = {};
+            console.log(req.query)
+            if (req.query?.email) {
+                query = { userEmail: req.query.email }
+            }
+      const find = mongodbAddToCard.find(query);
       const result = await find.toArray();
-      // const result2 = result.slice(0, 8);
+      console.log(result)
       res.send(result);
       })
+    // app.get('/addToCard', async(req, res)=>{
+    //   const find = mongodbAddToCard.find();
+    //   const result = await find.toArray();
+    //   res.send(result);
+    //   })
     app.get('/addToCard/name:id', async(req, res)=>{
       const find = req.params.id;
       const cursor = {_id: new ObjectId(find)};
